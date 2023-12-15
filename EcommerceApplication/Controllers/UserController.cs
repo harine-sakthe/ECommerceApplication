@@ -20,7 +20,7 @@ namespace EcommerceApplication.Controllers
 		public IActionResult Get()
 		{
 			List<User> users = _Repository.GetUsers();
-			if(users == null)
+			if (users == null)
 			{
 				return NotFound();
 			}
@@ -41,14 +41,16 @@ namespace EcommerceApplication.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Post( User user) {
+		public IActionResult Post(User user)
+		{
 			_Repository.CreateUser(user);
-				return Ok(user); 
+			return Ok(user);
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult Put(int id,  User updatedUser) {
-			 _Repository.UpdateUser(id, updatedUser);
+		public IActionResult Put(int id, User updatedUser)
+		{
+			_Repository.UpdateUser(id, updatedUser);
 			return Ok(updatedUser);
 		}
 

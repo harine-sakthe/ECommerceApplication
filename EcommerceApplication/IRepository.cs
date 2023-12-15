@@ -4,10 +4,24 @@ namespace EcommerceApplication
 {
 	public interface IRepository
 	{
+
 		List<User> GetUsers();
 		User GetUserById(int id);
 		void CreateUser(User user);
 		void UpdateUser(int id, User user);
-	    void DeleteUser(int id);
+		void DeleteUser(int id);
+
+		List<Product> GetProducts();
+		Product GetProductById(int id);
+		void CreateProduct(Product product);
+		void UpdateProduct(int id, Product product);
+		void DeleteProduct(int id);
+
+		List<Cart> GetCarts();
+		Cart GetCartById(int cartId);
+		void CreateCart(Cart cart);
+		void UpdateCart(int id, Cart cart);
+		void DeleteCart(int id);
+
 	}
 }

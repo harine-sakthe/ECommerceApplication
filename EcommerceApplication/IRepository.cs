@@ -22,6 +22,11 @@ namespace EcommerceApplication
 		void CreateCart(Cart cart);
 		void UpdateCart(int id, Cart cart);
 		void DeleteCart(int id);
+		Cart GetCartEntry(int userId, int productId);
+		Product GetProductByName(string productName);
+		User GetUserByUsername(string username);
+		void AddToCart(string username, string productName, int quantity);
+
 
 	}
 }

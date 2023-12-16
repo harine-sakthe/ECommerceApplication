@@ -1,6 +1,7 @@
 ﻿using EcommerceApplication.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApplication.Controllers
 {
@@ -25,7 +26,6 @@ namespace EcommerceApplication.Controllers
 		}
 
 		[HttpGet("{id}")]
-
 		public IActionResult GetById(int id)
 		{
 			Cart cart = _Repository.GetCartById(id);
@@ -44,6 +44,13 @@ namespace EcommerceApplication.Controllers
 			return Ok(cart);
 		}
 
+		[HttpPost("add-to-cart")]
+		public IActionResult AddToCart(string username, string productName, int quantity)
+		{
+			_Repository.AddToCart(username, productName, quantity);
+			return Ok("Product added to cart successfully");
+		}
+
 		[HttpPut("{id}")]
 		public IActionResult Put(int id, Cart updatedCart)
 		{
@@ -57,7 +64,6 @@ namespace EcommerceApplication.Controllers
 			_Repository.DeleteCart(id);
 			return Ok();
 		}
-
-
 	}
+
 }

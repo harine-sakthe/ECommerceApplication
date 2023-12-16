@@ -1,6 +1,7 @@
 ﻿using EcommerceApplication.Data;
 using EcommerceApplication.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApplication.Repository
 {
@@ -11,9 +12,6 @@ namespace EcommerceApplication.Repository
 		{
 			this.databaseContext = databaseContext;
 		}
-
-
-
 		public List<User> GetUsers()
 		{
 			return databaseContext.Users.ToList();
@@ -94,23 +92,64 @@ namespace EcommerceApplication.Repository
 		{
 			return databaseContext.Carts.FirstOrDefault(u => u.Id == id);
 		}
-
+		public Cart GetCartEntry(int userId, int productId)
+		{
+			return databaseContext.Carts
+				.FirstOrDefault(c => c.UserId == userId && c.ProductId == productId);
+		}
 		public void CreateCart(Cart carts)
 		{
 			databaseContext.Carts.Add(carts);
 			databaseContext.SaveChanges();
 		}
-		public void UpdateCart(int id, Cart updatedCart)
+		public void AddToCart(string username, string productName, int quantity)
 		{
-			Cart existingCart = databaseContext.Carts.FirstOrDefault(s => s.Id == id);
-			if (existingCart != null)
+			var user = GetUserByUsername(username);
+			if (user == null)
 			{
-				existingCart.UserId = updatedCart.UserId;
-				databaseContext.SaveChanges();
+				// Handle user not found
+				return;
 			}
 
+			var product = GetProductByName(productName);
+			if (product == null)
+			{
+				// Handle product not found
+				return;
+			}
+
+			var cartEntry = GetCartEntry(user.Id, product.Id);
+
+			if (cartEntry != null)
+			{
+				// If the item already exists in the cart, update the quantity
+				cartEntry.Quantity += quantity;
+			}
+			else
+			{
+				// If not, create a new cart entry
+				cartEntry = new Cart
+				{
+					User = user,
+					Product = product,
+					Quantity = quantity
+				};
+
+				CreateCart(cartEntry);
+			}
+
+			databaseContext.SaveChanges();
 		}
 
+		public void UpdateCart(int id, Cart updatedCart)
+		{
+			var existingCart = databaseContext.Carts.FirstOrDefault(c => c.Id == id);
+			if (existingCart != null)
+			{
+				existingCart.Quantity = updatedCart.Quantity;
+				databaseContext.SaveChanges();
+			}
+		}
 		public void DeleteCart(int id)
 		{
 			Cart cart = databaseContext.Carts.FirstOrDefault(s => s.Id == id);
@@ -118,6 +157,13 @@ namespace EcommerceApplication.Repository
 			databaseContext.Carts.Remove(cart);
 			databaseContext.SaveChanges();
 		}
-
+		public Product GetProductByName(string productName)
+		{
+			return databaseContext.Products.FirstOrDefault(p => p.Name == productName);
+		}
+		public User GetUserByUsername(string username)
+		{
+			return databaseContext.Users.FirstOrDefault(u => u.Username == username);
+		}
 	}
 }

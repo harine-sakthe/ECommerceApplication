@@ -13,6 +13,9 @@ namespace EcommerceApplication.Models
 
 		[ForeignKey(nameof(User))]
 		public int UserId { get; set; }
+		public int ProductId { get; set; }
+		public Product Product { get; set; }
+		public int Quantity { get; set; }
 
 		public virtual User User { get; set; }
 
